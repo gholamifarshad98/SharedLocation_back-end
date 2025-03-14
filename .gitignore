@@ -1,0 +1,90 @@
+# Django-specific ignores
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+media/
+staticfiles/
+
+# Python-specific ignores
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Log files
+*.log
+*.log.*
+logs/
+log/
+
+# Virtual environment
+venv/
+env/
+ENV/
+.env/
+.venv/
+
+# IDE-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Testing and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Django secret key
+secret_key.txt
+
+# Migrations (optional, but recommended to ignore if you want to version control migrations)
+# migrations/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Misc
+*.bak
+*.tmp
+*.temp

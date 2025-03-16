@@ -25,11 +25,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class UserLocationSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
+    user = UserSerializer(read_only=True)  # User is read-only in response
     class Meta:
         model = UserLocation
         fields = ['id', 'user', 'latitude', 'longitude', 'last_updated']
+        read_only_fields = ['last_updated']  # Auto-set by model
 
 class SharedUserSerializer(serializers.ModelSerializer):
     shared_with = UserSerializer(read_only=True)

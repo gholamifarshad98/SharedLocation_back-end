@@ -126,19 +126,22 @@ class UserLocationDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, user_id):
-        print(f"Fetching locations for user_id {user_id} by {request.user.username}")  # Debug
+        print(f"Fetching locations for user_id {user_id} by {request.user.username}")
         try:
             target_user = User.objects.get(id=user_id)
-            if request.user == target_user or SharedUser.objects.filter(owner=target_user, shared_with=request.user).exists():
+            # Check if requester is the target user, has SharedUser, or has AllowedUser permission
+            if (request.user == target_user or 
+                SharedUser.objects.filter(owner=target_user, shared_with=request.user).exists() or 
+                AllowedUser.objects.filter(owner=target_user, allowed_to=request.user).exists()):
                 locations = UserLocation.objects.filter(user=target_user).order_by('-last_updated')
                 if not locations.exists():
-                    print(f"No locations found for user {target_user.username}")  # Debug
+                    print(f"No locations found for user {target_user.username}")
                     return Response([], status=status.HTTP_200_OK)  # Empty list if no locations
                 serializer = UserLocationSerializer(locations, many=True)
-                print(f"Locations for {target_user.username}: {serializer.data}")  # Debug
+                print(f"Locations for {target_user.username}: {serializer.data}")
                 return Response(serializer.data)
-            print(f"Permission denied for {request.user.username} to view {target_user.username}'s locations")  # Debug
+            print(f"Permission denied for {request.user.username} to view {target_user.username}'s locations")
             return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
         except User.DoesNotExist:
-            print(f"User {user_id} not found")  # Debug
+            print(f"User {user_id} not found")
             return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)

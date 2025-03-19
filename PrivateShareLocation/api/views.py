@@ -55,12 +55,10 @@ class UserLocationView(APIView):
         if not request.user.is_authenticated:
             print("User not authenticated")
             return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
-        data['user'] = request.user.id  # Explicitly set user_id
-        print(f"Setting user_id to {request.user.id} for {request.user.username}")  # Debug
-        serializer = UserLocationSerializer(data=data)
+        serializer = UserLocationSerializer(data=data, context={'user': request.user})
         if serializer.is_valid():
             try:
-                serializer.save()
+                serializer.save(user=request.user)  # Pass user explicitly to serializer
                 print(f"Location saved for {request.user.username}: {serializer.data}")  # Debug
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:

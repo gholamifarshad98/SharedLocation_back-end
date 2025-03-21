@@ -14,26 +14,25 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
-        extra_kwargs = {'email': {'required': False}}  # Email optional for compatibility
+        extra_kwargs = {'email': {'required': False}}
 
     def create(self, validated_data):
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get('email', ''),  # Default to empty string if not provided
+            email=validated_data.get('email', ''),
             password=validated_data['password']
         )
         return user
 
 class UserLocationSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)  # User is read-only in response
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = UserLocation
         fields = ['id', 'user', 'latitude', 'longitude', 'last_updated']
-        read_only_fields = ['last_updated']  # Auto-set by model
+        read_only_fields = ['last_updated']
 
     def create(self, validated_data):
-        # Use the user passed from the view (via save(user=...))
         user = self.context.get('user')
         if not user:
             raise serializers.ValidationError("User must be provided by the view")
@@ -53,7 +52,9 @@ class SharedUserSerializer(serializers.ModelSerializer):
 
 class AllowedUserSerializer(serializers.ModelSerializer):
     allowed_to = UserSerializer(read_only=True)
+    owner = UserSerializer(read_only=True)  # Added owner field
 
     class Meta:
         model = AllowedUser
-        fields = ['id', 'allowed_to', 'last_viewed']
+        fields = ['id', 'allowed_to', 'owner', 'last_viewed']  # Updated fields
+        
